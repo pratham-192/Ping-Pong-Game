@@ -20,17 +20,13 @@ function takenames() {
 
 }
 
-// function takenamessecondtime(x, y) {
-//     document.querySelector("#rod-1-title div").innerText = x;
-//     document.querySelector("#rod-2-title div").innerText = y;
-// }
 let score = 0, movement, ballSpeedX = 2, ballSpeedY = 2;
 let gameOn = false;
 
 let container = document.getElementById("game-window").getBoundingClientRect();
 
-var speedincreaserX = 0.001;
-var speedincreaserY = 0.001;
+var speedincreaserX = 0.0005;
+var speedincreaserY = 0.0005;
 
 //reseting board and maintaining local storage
 window.onload = resetgame();
@@ -130,6 +126,8 @@ window.addEventListener("keypress", function (event) {
             //strike with rod 2
             if ((ballcenter) >= rod2coords.x) {
                 ballSpeedX = -ballSpeedX;
+
+                //game ends
                 if (ballCoords.top > rod2coords.bottom || ballCoords.bottom < rod2coords.top) {
                     //ball speed reset
                     if (ballSpeedX < 0) ballSpeedX = -2;
