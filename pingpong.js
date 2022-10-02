@@ -3,7 +3,7 @@ var rod1 = document.getElementById("rod-1");
 var rod2 = document.getElementById("rod-2");
 var rod1score = document.getElementById("rod-1-score");
 var rod2score = document.getElementById("rod-2-score");
-var reset=document.getElementById("reset");
+var reset = document.getElementById("reset");
 
 //taking names of both players
 
@@ -24,19 +24,19 @@ function takenames() {
 //     document.querySelector("#rod-1-title div").innerText = x;
 //     document.querySelector("#rod-2-title div").innerText = y;
 // }
-let score=0, movement, ballSpeedX = 3, ballSpeedY = 3;
+let score = 0, movement, ballSpeedX = 2, ballSpeedY = 2;
 let gameOn = false;
 
 let container = document.getElementById("game-window").getBoundingClientRect();
 
-var speedincreaserX=0.3;
-var speedincreaserY=0.3;
+var speedincreaserX = 0.001;
+var speedincreaserY = 0.001;
 
 //reseting board and maintaining local storage
-window.onload=resetgame();
+window.onload = resetgame();
 
-reset.addEventListener("click",resetgame);
-function resetgame(){
+reset.addEventListener("click", resetgame);
+function resetgame() {
     console.log("fajd");
     sessionStorage.clear();
     startgame();
@@ -50,10 +50,10 @@ function startgame() {
     if ((x1 == null || x1score == null) && (x2 == null || x2score == null)) {
         alert("This is the first time you're playing the game. Let's start!!");
         takenames();
-        do{
-        score=prompt("Enter max game points", "11");
-        console.log(score);
-    }while(parseInt(score)<=0 || parseInt(score)>21);
+        do {
+            score = prompt("Enter max game points ( a valid integer)", "11");
+            console.log(score);
+        } while (parseInt(score) <= 0 || parseInt(score) > 21);
     } else {
         if (x1 != null && x2 != null) {
             alert(x1 + " has won " + x1score + " times. \n" + x2 + " has won " + x2score + " times.");
@@ -118,6 +118,12 @@ window.addEventListener("keypress", function (event) {
 
                 //game ends
                 if (ballCoords.top > rod1coords.bottom || ballCoords.bottom < rod1coords.top) {
+                    //ball speed reset
+                    if (ballSpeedX < 0) ballSpeedX = -2;
+                    if (ballSpeedX > 0) ballSpeedX = 2;
+                    if (ballSpeedY < 0) ballSpeedY = -2;
+                    if (ballSpeedY > 0) ballSpeedY = 2;
+
                     updateWin("Rod-2");
                 }
             }
@@ -125,9 +131,21 @@ window.addEventListener("keypress", function (event) {
             if ((ballcenter) >= rod2coords.x) {
                 ballSpeedX = -ballSpeedX;
                 if (ballCoords.top > rod2coords.bottom || ballCoords.bottom < rod2coords.top) {
+                    //ball speed reset
+                    if (ballSpeedX < 0) ballSpeedX = -2;
+                    if (ballSpeedX > 0) ballSpeedX = 2;
+                    if (ballSpeedY < 0) ballSpeedY = -2;
+                    if (ballSpeedY > 0) ballSpeedY = 2;
+
                     updateWin("Rod-1");
                 }
             }
+
+            //ball speed increased
+            if (ballSpeedX < 0) ballSpeedX -= speedincreaserX;
+            if (ballSpeedX > 0) ballSpeedX += speedincreaserX;
+            if (ballSpeedY < 0) ballSpeedY -= speedincreaserY;
+            if (ballSpeedY > 0) ballSpeedY += speedincreaserY;
         }, 10);
     }
 })
@@ -151,10 +169,11 @@ function updateWin(rod) {
         rod2score.innerText = 0;
         alert(player1 + " wins!!");
 
+        //updating session storage
         if (x1 == null) {
             sessionStorage.setItem("player1name", player1);
             sessionStorage.setItem("player1score", 1);
-        }else {
+        } else {
             let prevscore = x1score;
             sessionStorage.removeItem("player1name");
             sessionStorage.removeItem("player1score");
@@ -169,6 +188,7 @@ function updateWin(rod) {
         rod2score.innerText = 0;
         alert(player2 + " wins!!");
 
+        //updating session storage
         if (x2 == null) {
             sessionStorage.setItem("player2name", player2);
             sessionStorage.setItem("player2score", 1);
